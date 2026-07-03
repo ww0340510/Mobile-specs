@@ -1,0 +1,175 @@
+07.03 11:59 am
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Specs Finder</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px border #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #1a73e8;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #1557b0;
+        }
+        .loading {
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+            display: none;
+        }
+        .spec-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        .spec-label {
+            font-weight: bold;
+            color: #1a73e8;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        .spec-value {
+            font-size: 16px;
+            color: #444;
+            line-height: 1.4;
+        }
+        .error-msg {
+            color: #d93025;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Mobile Specs Finder</h2>
+    
+    <div class="search-box">
+        <input type="text" id="phoneInput" placeholder="Ex: iPhone 15, S24 Ultra...">
+        <button onclick="searchPhone()">Search</button>
+    </div>
+
+    <div id="loading" class="loading">Searching Mobile Details...</div>
+    <div id="resultContent"></div>
+</div>
+
+<script>
+async function searchPhone() {
+    const phoneName = document.getElementById('phoneInput').value.trim();
+    const resultContent = document.getElementById('resultContent');
+    const loading = document.getElementById('loading');
+    
+    if(!phoneName) {
+        alert("Please enter a mobile name first!");
+        return;
+    }
+
+    resultContent.innerHTML = "";
+    loading.style.display = "block";
+
+    try {
+        // Step 1: Search for the phone to get its unique slug/ID
+        const searchUrl = `https://phone-specs-api.vercel.app/search?query=${encodeURIComponent(phoneName)}`;
+        const searchResponse = await fetch(searchUrl);
+        const searchData = await searchResponse.json();
+
+        if(!searchData.status || searchData.data.phones.length === 0) {
+            resultContent.innerHTML = "<p class='error-msg'>Mobile nahi mila! Please sahi naam likhein.</p>";
+            loading.style.display = "none";
+            return;
+        }
+
+        // Get the first matched phone's slug
+        const phoneSlug = searchData.data.phones[0].slug;
+
+        // Step 2: Fetch detailed specifications using that slug
+        const detailUrl = `https://phone-specs-api.vercel.app/${phoneSlug}`;
+        const detailResponse = await fetch(detailUrl);
+        const detailData = await detailResponse.json();
+
+        if(!detailData.status) {
+            resultContent.innerHTML = "<p class='error-msg'>Details load karne mein masla hua.</p>";
+            loading.style.display = "none";
+            return;
+        }
+
+        const specs = detailData.data;
+        let htmlOutput = `<h3>${specs.phone_name} (${specs.brand})</h3>`;
+
+        // Loop through specifications and display line by line
+        specs.specifications.forEach(section => {
+            section.specs.forEach(item => {
+                htmlOutput += `
+                    <div class="spec-item">
+                        <span class="spec-label">${section.title} - ${item.key}</span>
+                        <span class="spec-value">${item.val.join(', ')}</span>
+                    </div>
+                `;
+            });
+        });
+
+        resultContent.innerHTML = htmlOutput;
+
+    } catch (error) {
+        resultContent.innerHTML = "<p class='error-msg'>Internet ya API ka masla hai. Dobara koshish karein.</p>";
+    } finally {
+        loading.style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>
+
