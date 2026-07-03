@@ -1,5 +1,3 @@
-07.03 11:59 am
-index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +33,7 @@ index.html
         input {
             flex: 1;
             padding: 12px;
-            border: 2px border #e0e0e0;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
             outline: none;
@@ -62,6 +60,36 @@ index.html
             font-weight: bold;
             color: #666;
             display: none;
+        }
+        .phone-title {
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
+            margin-top: 20px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .image-box {
+            text-align: center;
+            flex: 1;
+        }
+        .image-box img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+        }
+        .image-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            margin-top: 5px;
         }
         .spec-item {
             padding: 12px 0;
@@ -97,7 +125,7 @@ index.html
     <h2>Mobile Specs Finder</h2>
     
     <div class="search-box">
-        <input type="text" id="phoneInput" placeholder="Ex: iPhone 15, S24 Ultra...">
+        <input type="text" id="phoneInput" placeholder="Search iPhone, Samsung, Vivo...">
         <button onclick="searchPhone()">Search</button>
     </div>
 
@@ -106,12 +134,153 @@ index.html
 </div>
 
 <script>
-async function searchPhone() {
-    const phoneName = document.getElementById('phoneInput').value.trim();
+// Large Local Mobile Database
+const mobileDatabase = [
+    // --- APPLE ---
+    {
+        name: "iPhone 16 Pro Max",
+        brand: "Apple",
+        front_image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400",
+        back_image: "https://images.unsplash.com/photo-1695048133230-03fa4a8cd9ec?w=400",
+        specs: { "Processor": "Apple A18 Pro", "Display": "6.9 inches OLED, 120Hz", "Camera": "48MP + 48MP + 12MP", "Battery": "4676 mAh", "Memory": "256GB/512GB/1TB, 8GB RAM" }
+    },
+    {
+        name: "iPhone 15 Pro Max",
+        brand: "Apple",
+        front_image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400",
+        back_image: "https://images.unsplash.com/photo-1695048133230-03fa4a8cd9ec?w=400",
+        specs: { "Processor": "Apple A17 Pro", "Display": "6.7 inches OLED, 120Hz", "Camera": "48MP + 12MP + 12MP", "Battery": "4441 mAh", "Memory": "256GB/512GB/1TB, 8GB RAM" }
+    },
+    {
+        name: "iPhone 15",
+        brand: "Apple",
+        front_image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=400",
+        back_image: "https://images.unsplash.com/photo-510557880182-3d4d3cba35a5?w=400",
+        specs: { "Processor": "Apple A16 Bionic", "Display": "6.1 inches OLED", "Camera": "48MP + 12MP", "Battery": "3349 mAh", "Memory": "128GB/256GB/512GB, 6GB RAM" }
+    },
+    {
+        name: "iPhone 14 Pro Max",
+        brand: "Apple",
+        front_image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=400",
+        back_image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=400",
+        specs: { "Processor": "Apple A16 Bionic", "Display": "6.7 inches OLED, 120Hz", "Camera": "48MP + 12MP + 12MP", "Battery": "4323 mAh", "Memory": "128GB/256GB/512GB, 6GB RAM" }
+    },
+    {
+        name: "iPhone 13 Pro Max",
+        brand: "Apple",
+        front_image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=400",
+        back_image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=400",
+        specs: { "Processor": "Apple A15 Bionic", "Display": "6.7 inches OLED, 120Hz", "Camera": "12MP + 12MP + 12MP", "Battery": "4352 mAh", "Memory": "128GB/256GB/512GB, 6GB RAM" }
+    },
+    {
+        name: "iPhone 11",
+        brand: "Apple",
+        front_image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=400",
+        back_image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=400",
+        specs: { "Processor": "Apple A13 Bionic", "Display": "6.1 inches Liquid Retina Liquid Crystal Display", "Camera": "12MP + 12MP", "Battery": "3110 mAh", "Memory": "64GB/128GB/256GB, 4GB RAM" }
+    },
+
+    // --- SAMSUNG ---
+    {
+        name: "Samsung Galaxy S24 Ultra",
+        brand: "Samsung",
+        front_image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400",
+        back_image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400",
+        specs: { "Processor": "Snapdragon 8 Gen 3", "Display": "6.8 inches AMOLED, 120Hz", "Camera": "200MP + 50MP + 10MP + 12MP", "Battery": "5000 mAh", "Memory": "256GB/512GB/1TB, 12GB RAM" }
+    },
+    {
+        name: "Samsung Galaxy S23 Ultra",
+        brand: "Samsung",
+        front_image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400",
+        back_image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400",
+        specs: { "Processor": "Snapdragon 8 Gen 2", "Display": "6.8 inches AMOLED, 120Hz", "Camera": "200MP + 10MP + 10MP + 12MP", "Battery": "5000 mAh", "Memory": "256GB/512GB, 8GB/12GB RAM" }
+    },
+    {
+        name: "Samsung Galaxy A55",
+        brand: "Samsung",
+        front_image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400",
+        back_image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400",
+        specs: { "Processor": "Exynos 1480", "Display": "6.6 inches Super AMOLED, 120Hz", "Camera": "50MP + 12MP + 55MP", "Battery": "5000 mAh", "Memory": "128GB/256GB, 8GB/12GB RAM" }
+    },
+    {
+        name: "Samsung Galaxy A35",
+        brand: "Samsung",
+        front_image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400",
+        back_image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400",
+        specs: { "Processor": "Exynos 1380", "Display": "6.6 inches Super AMOLED, 120Hz", "Camera": "50MP + 8MP + 5MP", "Battery": "5000 mAh", "Memory": "128GB/256GB, 6GB/8GB RAM" }
+    },
+
+    // --- INFINIX ---
+    {
+        name: "Infinix Note 40 Pro",
+        brand: "Infinix",
+        front_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        back_image: "https://images.unsplash.com/photo-1565849906660-bf47ffc6c3df?w=400",
+        specs: { "Processor": "MediaTek Helio G99 Ultimate", "Display": "6.78 inches AMOLED Curved, 120Hz", "Camera": "108MP + 2MP + 2MP", "Battery": "5000 mAh, 70W Fast", "Memory": "256GB, 8GB/12GB RAM" }
+    },
+    {
+        name: "Infinix Hot 40 Pro",
+        brand: "Infinix",
+        front_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        back_image: "https://images.unsplash.com/photo-1565849906660-bf47ffc6c3df?w=400",
+        specs: { "Processor": "MediaTek Helio G99", "Display": "6.78 inches IPS LCD, 120Hz", "Camera": "108MP + 2MP", "Battery": "5000 mAh", "Memory": "128GB/256GB, 8GB RAM" }
+    },
+
+    // --- VIVO ---
+    {
+        name: "Vivo V30 Pro",
+        brand: "Vivo",
+        front_image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400",
+        back_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        specs: { "Processor": "MediaTek Dimensity 8200", "Display": "6.78 inches AMOLED, 120Hz", "Camera": "50MP + 50MP + 50MP", "Battery": "5000 mAh", "Memory": "256GB/512GB, 12GB RAM" }
+    },
+    {
+        name: "Vivo Y200",
+        brand: "Vivo",
+        front_image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400",
+        back_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        specs: { "Processor": "Snapdragon 4 Gen 1", "Display": "6.67 inches AMOLED, 120Hz", "Camera": "64MP + 2MP", "Battery": "4800 mAh", "Memory": "128GB/256GB, 8GB RAM" }
+    },
+
+    // --- TECNO ---
+    {
+        name: "Tecno Camon 30 Pro",
+        brand: "Tecno",
+        front_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        back_image: "https://images.unsplash.com/photo-1565849906660-bf47ffc6c3df?w=400",
+        specs: { "Processor": "MediaTek Dimensity 8200 Ultimate", "Display": "6.78 inches AMOLED, 144Hz", "Camera": "50MP + 50MP + 2MP", "Battery": "5000 mAh", "Memory": "256GB/512GB, 12GB RAM" }
+    },
+    {
+        name: "Tecno Spark 20 Pro",
+        brand: "Tecno",
+        front_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        back_image: "https://images.unsplash.com/photo-1565849906660-bf47ffc6c3df?w=400",
+        specs: { "Processor": "MediaTek Helio G99", "Display": "6.78 inches IPS LCD, 120Hz", "Camera": "108MP", "Battery": "5000 mAh", "Memory": "256GB, 8GB RAM" }
+    },
+
+    // --- XIAOMI / REDMI ---
+    {
+        name: "Redmi Note 13 Pro",
+        brand: "Xiaomi",
+        front_image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400",
+        back_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        specs: { "Processor": "MediaTek Helio G99 Ultra", "Display": "6.67 inches AMOLED, 120Hz", "Camera": "200MP + 8MP + 2MP", "Battery": "5000 mAh", "Memory": "256GB/512GB, 8GB/12GB RAM" }
+    },
+    {
+        name: "Xiaomi 14",
+        brand: "Xiaomi",
+        front_image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400",
+        back_image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+        specs: { "Processor": "Snapdragon 8 Gen 3", "Display": "6.36 inches LTPO OLED, 120Hz", "Camera": "50MP + 50MP + 50MP", "Battery": "4610 mAh", "Memory": "256GB/512GB, 8GB/12GB/16GB RAM" }
+    }
+];
+
+function searchPhone() {
+    const phoneInput = document.getElementById('phoneInput').value.trim().toLowerCase().replace(/\s+/g, '');
     const resultContent = document.getElementById('resultContent');
     const loading = document.getElementById('loading');
     
-    if(!phoneName) {
+    if(!phoneInput) {
         alert("Please enter a mobile name first!");
         return;
     }
@@ -119,54 +288,43 @@ async function searchPhone() {
     resultContent.innerHTML = "";
     loading.style.display = "block";
 
-    try {
-        // Step 1: Search for the phone to get its unique slug/ID
-        const searchUrl = `https://phone-specs-api.vercel.app/search?query=${encodeURIComponent(phoneName)}`;
-        const searchResponse = await fetch(searchUrl);
-        const searchData = await searchResponse.json();
+    // Matching query
+    const matchedPhone = mobileDatabase.find(phone => {
+        const databaseName = phone.name.toLowerCase().replace(/\s+/g, '');
+        return databaseName.includes(phoneInput) || phoneInput.includes(databaseName);
+    });
 
-        if(!searchData.status || searchData.data.phones.length === 0) {
-            resultContent.innerHTML = "<p class='error-msg'>Mobile nahi mila! Please sahi naam likhein.</p>";
-            loading.style.display = "none";
-            return;
-        }
+    setTimeout(() => {
+        loading.style.display = "none";
 
-        // Get the first matched phone's slug
-        const phoneSlug = searchData.data.phones[0].slug;
-
-        // Step 2: Fetch detailed specifications using that slug
-        const detailUrl = `https://phone-specs-api.vercel.app/${phoneSlug}`;
-        const detailResponse = await fetch(detailUrl);
-        const detailData = await detailResponse.json();
-
-        if(!detailData.status) {
-            resultContent.innerHTML = "<p class='error-msg'>Details load karne mein masla hua.</p>";
-            loading.style.display = "none";
-            return;
-        }
-
-        const specs = detailData.data;
-        let htmlOutput = `<h3>${specs.phone_name} (${specs.brand})</h3>`;
-
-        // Loop through specifications and display line by line
-        specs.specifications.forEach(section => {
-            section.specs.forEach(item => {
+        if (matchedPhone) {
+            let htmlOutput = `<h3 class="phone-title">${matchedPhone.name} (${matchedPhone.brand})</h3>`;
+            htmlOutput += `
+                <div class="image-container">
+                    <div class="image-box">
+                        <img src="${matchedPhone.front_image}" alt="Front View">
+                        <div class="image-label">Front View</div>
+                    </div>
+                    <div class="image-box">
+                        <img src="${matchedPhone.back_image}" alt="Back View">
+                        <div class="image-label">Back View</div>
+                    </div>
+                </div>
+            `;
+            
+            for (const [key, value] of Object.entries(matchedPhone.specs)) {
                 htmlOutput += `
                     <div class="spec-item">
-                        <span class="spec-label">${section.title} - ${item.key}</span>
-                        <span class="spec-value">${item.val.join(', ')}</span>
+                        <span class="spec-label">${key}</span>
+                        <span class="spec-value">${value}</span>
                     </div>
                 `;
-            });
-        });
-
-        resultContent.innerHTML = htmlOutput;
-
-    } catch (error) {
-        resultContent.innerHTML = "<p class='error-msg'>Internet ya API ka masla hai. Dobara koshish karein.</p>";
-    } finally {
-        loading.style.display = "none";
-    }
+            }
+            resultContent.innerHTML = htmlOutput;
+        } else {
+            resultContent.innerHTML = "<p class='error-msg'>Mobile not found! Please make sure the spelling is correct or try a different brand.</p>";
+        }
+    }, 300);
 }
 </script>
 
