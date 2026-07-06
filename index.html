@@ -3,275 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Live Mobile Database</title>
+    <title>Universal Mobile Specs Engine</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #f3f4f6;
             margin: 0;
             padding: 15px;
-            color: #333;
         }
         .container {
-            max-width: 650px;
-            margin: 20px auto;
+            max-width: 600px;
+            margin: 30px auto;
             background: white;
             padding: 25px;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
         h2 {
             text-align: center;
-            color: #1a73e8;
+            color: #111827;
             margin-bottom: 5px;
-            font-size: 26px;
         }
         .subtitle {
             text-align: center;
-            color: #666;
-            font-size: 14px;
+            color: #6b7280;
+            font-size: 13px;
             margin-bottom: 25px;
         }
         .search-box {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
         }
         input {
             flex: 1;
             padding: 14px;
-            border: 2px solid #dcdcdc;
-            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
         }
         input:focus {
-            border-color: #1a73e8;
+            border-color: #2563eb;
         }
         button {
             padding: 14px 24px;
-            background-color: #1a73e8;
+            background-color: #2563eb;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background-color: #1557b0;
+            font-weight: 600;
         }
         .loading {
             text-align: center;
-            font-weight: bold;
-            color: #1a73e8;
+            color: #2563eb;
             display: none;
             margin: 20px 0;
+            font-weight: 500;
         }
-        .phone-header {
-            background: #1a73e8;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
+        .phone-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
             margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
         }
-        .image-container {
+        .phone-title {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+        .img-wrapper {
             display: flex;
-            justify-content: space-around;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .image-box {
-            text-align: center;
-            flex: 1;
-            background: #fafafa;
-            padding: 10px;
+            justify-content: center;
+            background: #f9fafb;
+            padding: 15px;
             border-radius: 10px;
-            border: 1px solid #eef2f5;
+            margin-bottom: 20px;
         }
-        .image-box img {
-            width: 100%;
+        .img-wrapper img {
             max-height: 250px;
             object-fit: contain;
-            border-radius: 6px;
         }
-        .image-label {
-            font-size: 13px;
-            font-weight: bold;
-            color: #666;
-            margin-top: 8px;
-        }
-        .spec-table {
+        .specs-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
         }
-        .spec-row {
-            border-bottom: 1px solid #eeeeee;
+        .specs-row {
+            border-bottom: 1px solid #f3f4f6;
         }
-        .spec-row:last-child {
+        .specs-row:last-child {
             border-bottom: none;
         }
-        .spec-label {
+        .specs-label {
             padding: 12px 8px;
-            font-weight: bold;
-            color: #1a73e8;
-            width: 30%;
+            font-weight: 600;
+            color: #2563eb;
+            width: 35%;
             font-size: 14px;
         }
-        .spec-value {
+        .specs-val {
             padding: 12px 8px;
-            color: #444;
-            font-size: 15px;
+            color: #4b5563;
+            font-size: 14px;
         }
-        .error-msg {
-            color: #d93025;
-            text-align: center;
-            font-weight: bold;
-            background: #fce8e6;
+        .error {
+            color: #dc2626;
+            background: #fee2e2;
             padding: 12px;
             border-radius: 8px;
+            text-align: center;
             margin-top: 20px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>All Mobile Specs Finder</h2>
-    <div class="subtitle">Search any model worldwide with real specifications and images</div>
+    <h2>Universal Mobile Finder</h2>
+    <div class="subtitle">Dunya Ka Koi Bhi Phone Search Karein — Live API, Real Pics & Real Specs</div>
     
     <div class="search-box">
-        <input type="text" id="phoneInput" placeholder="Type name (e.g., y03, s24 ultra, pixel 9, hot 40)...">
-        <button onclick="searchPhone()">Search</button>
+        <input type="text" id="phoneInput" placeholder="Brand ya model likhein (e.g., s24 ultra, iphone 16, y03)...">
+        <button onclick="searchGlobalAPI()">Search</button>
     </div>
 
-    <div id="loading" class="loading">Searching global databases for real specs...</div>
-    <div id="resultContent"></div>
+    <div id="loading" class="loading">Searching Global Database & Extracting Specs...</div>
+    <div id="result"></div>
 </div>
 
 <script>
-async function searchPhone() {
-    const rawInput = document.getElementById('phoneInput').value.trim();
-    const resultContent = document.getElementById('resultContent');
-    const loading = document.getElementById('loading');
-    
-    if(!rawInput) {
-        alert("Please enter a mobile name first!");
+async function searchGlobalAPI() {
+    const input = document.getElementById('phoneInput').value.trim();
+    const resultDiv = document.getElementById('result');
+    const loadingDiv = document.getElementById('loading');
+
+    if (!input) {
+        alert("Pehle mobile ka naam likhein!");
         return;
     }
 
-    resultContent.innerHTML = "";
-    loading.style.display = "block";
+    resultDiv.innerHTML = "";
+    loadingDiv.style.display = "block";
+
+    // Ulta-seedha input handle karne ke liye query ko clean karna
+    const cleanQuery = input.toLowerCase();
 
     try {
-        // Step 1: Open-source Phone API se query match karna
-        const searchUrl = `https://phone-api.pockethost.io/api/collections/phones/records?filter=(name~'${rawInput}'||brand~'${rawInput}')`;
+        // Step 1: Global Phone Search API se devices ki list fetch karna
+        const searchUrl = `https://openapi.programming-hero.com/api/phones?search=${encodeURIComponent(cleanQuery)}`;
         const response = await fetch(searchUrl);
         const data = await response.json();
 
-        loading.style.display = "none";
+        if (data.status && data.data && data.data.length > 0) {
+            // Sabse pehla aur best matching phone uthana
+            const phoneShortInfo = data.data[0];
+            const phoneSlug = phoneShortInfo.slug; // Har phone ka unique code/slug
 
-        if (data.items && data.items.length > 0) {
-            // Best matched record pick karna
-            const phone = data.items[0];
-            
-            // Real Images logic (Front and Back layout)
-            const imgFront = phone.image_url || `https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400`;
-            const imgBack = phone.back_image_url || `https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400`;
+            // Step 2: Us unique phone ki deep technical specifications fetch karna
+            const detailsUrl = `https://openapi.programming-hero.com/api/phone/${phoneSlug}`;
+            const detailResponse = await fetch(detailsUrl);
+            const detailData = await detailResponse.json();
 
-            let htmlOutput = `<div class="phone-header">${phone.brand} ${phone.name}</div>`;
-            htmlOutput += `
-                <div class="image-container">
-                    <div class="image-box">
-                        <img src="${imgFront}" alt="Front View" onerror="this.src='https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400'">
-                        <div class="image-label">Front View</div>
-                    </div>
-                    <div class="image-box">
-                        <img src="${imgBack}" alt="Back View" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400'">
-                        <div class="image-label">Back View</div>
-                    </div>
-                </div>
-                <table class="spec-table">
-                    <tr class="spec-row"><td class="spec-label">Processor</td><td class="spec-value">${phone.processor || 'Octa-core Real Processor'}</td></tr>
-                    <tr class="spec-row"><td class="spec-label">Display</td><td class="spec-value">${phone.display || 'FHD+ Smooth Display'}</td></tr>
-                    <tr class="spec-row"><td class="spec-label">Camera</td><td class="spec-value">${phone.camera || 'High Resolution Lens'}</td></tr>
-                    <tr class="spec-row"><td class="spec-label">Battery</td><td class="spec-value">${phone.battery || '5000 mAh Heavy Duty'}</td></tr>
-                    <tr class="spec-row"><td class="spec-label">Memory</td><td class="spec-value">${phone.memory || 'High Speed RAM & Storage'}</td></tr>
-                </table>
-            `;
-            resultContent.innerHTML = htmlOutput;
+            loadingDiv.style.display = "none";
+
+            if (detailData.status && detailData.data) {
+                renderUniversalUI(detailData.data, resultDiv);
+            } else {
+                showError(resultDiv);
+            }
         } else {
-            // Backup Local Intelligent Handler in case API mismatch
-            handleLocalBackup(rawInput, resultContent);
+            loadingDiv.style.display = "none";
+            resultDiv.innerHTML = `<div class="error">Dunya ke database mein yeh model nahi mila! Spelling thodi theek kar ke try karein.</div>`;
         }
-    } catch (error) {
-        handleLocalBackup(rawInput, resultContent);
+    } catch (e) {
+        loadingDiv.style.display = "none";
+        showError(resultDiv);
     }
 }
 
-// Intelligent Live Parser (Agar API offline ho to 100% real spec generate kare bina jhoot ke)
-function handleLocalBackup(input, container) {
-    document.getElementById('loading').style.display = "none";
-    const clean = input.toLowerCase();
+function renderUniversalUI(phone, container) {
+    // API se aane wali real specific fields
+    const mainSpecs = phone.mainFeatures || {};
     
-    let brand = "Mobile", name = input, proc = "Octa-core", cam = "Multi-Lens Pro", bat = "5000 mAh", mem = "128GB Storage / 8GB RAM", disp = "6.67 inches AMOLED 120Hz";
-    let imgF = "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400";
-    let imgB = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400";
-
-    // Dynamic brand detection
-    if(clean.includes("vivo")) brand = "Vivo";
-    else if(clean.includes("samsung") || clean.includes("galaxy") || clean.startsWith("s2")) brand = "Samsung";
-    else if(clean.includes("iphone") || clean.includes("apple")) brand = "Apple";
-    else if(clean.includes("pixel") || clean.includes("google")) brand = "Google";
-    else if(clean.includes("oppo")) brand = "Oppo";
-    else if(clean.includes("realme")) brand = "Realme";
-    else if(clean.includes("redmi") || clean.includes("xiaomi")) brand = "Xiaomi Redmi";
-    else if(clean.includes("oneplus")) brand = "OnePlus";
-    else if(clean.includes("tecno")) brand = "Tecno";
-    else if(clean.includes("infinix")) brand = "Infinix";
-
-    // 100% Exact Specific Real Match Handlers
-    if(clean.includes("y03")) {
-        brand = "Vivo"; name = "Y03"; proc = "MediaTek Helio G85 (12nm)"; cam = "13 MP Main + Auxiliary lens"; bat = "5000 mAh (15W Charging)"; mem = "64GB/128GB Storage, 4GB RAM"; disp = "6.56 inches IPS LCD, 90Hz";
-    } else if(clean.includes("s24") && clean.includes("ultra")) {
-        brand = "Samsung"; name = "Galaxy S24 Ultra"; proc = "Snapdragon 8 Gen 3 (4 nm)"; cam = "200 MP + 50 MP + 10 MP + 12 MP"; bat = "5000 mAh (45W Charging)"; mem = "256GB/512GB/1TB, 12GB RAM"; disp = "6.8 inches Dynamic AMOLED 2X, 120Hz";
-    } else if(clean.includes("s24")) {
-        brand = "Samsung"; name = "Galaxy S24"; proc = "Exynos 2400 / Snapdragon 8 Gen 3"; cam = "50 MP + 10 MP + 12 MP"; bat = "4000 mAh (25W Charging)"; mem = "128GB/256GB/512GB, 8GB RAM"; disp = "6.2 inches Dynamic LTPO AMOLED 2X";
-    } else if(clean.includes("16") && clean.includes("pro")) {
-        brand = "Apple"; name = "iPhone 16 Pro Max"; proc = "Apple A18 Pro (3 nm)"; cam = "48 MP + 48 MP + 12 MP"; bat = "4676 mAh"; mem = "256GB/512GB/1TB, 8GB RAM"; disp = "6.9 inches LTPO Super Retina XDR OLED";
-    } else if(clean.includes("pixel 9")) {
-        brand = "Google"; name = "Pixel 9 Pro XL"; proc = "Google Tensor G4 (4 nm)"; cam = "50 MP + 48 MP + 48 MP"; bat = "5060 mAh"; mem = "128GB/256GB/512GB, 16GB RAM"; disp = "6.8 inches LTPO OLED, 120Hz";
-    } else if(clean.includes("note 40")) {
-        brand = "Infinix"; name = "Note 40 Pro"; proc = "MediaTek Helio G99 Ultimate"; cam = "108 MP (OIS) Triple"; bat = "5000 mAh (70W Fast)"; mem = "256GB Storage, 8GB/12GB RAM"; disp = "6.78 inches AMOLED Curved 120Hz";
-    }
-
-    let htmlOutput = `<div class="phone-header">${brand} ${name.toUpperCase()}</div>`;
-    htmlOutput += `
-        <div class="image-container">
-            <div class="image-box">
-                <img src="${imgF}" alt="Front View">
-                <div class="image-label">Front View</div>
+    container.innerHTML = `
+        <div class="phone-card">
+            <div class="phone-title">${phone.name}</div>
+            <div class="img-wrapper">
+                <img src="${phone.image}" alt="${phone.name}" onerror="this.src='https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400'">
             </div>
-            <div class="image-box">
-                <img src="${imgB}" alt="Back View">
-                <div class="image-label">Back View</div>
-            </div>
+            <table class="specs-table">
+                <tr class="specs-row"><td class="specs-label">Brand</td><td class="specs-val">${phone.brand}</td></tr>
+                <tr class="specs-row"><td class="specs-label">Processor</td><td class="specs-val">${mainSpecs.chipSet || 'Official Chipset Data'}</td></tr>
+                <tr class="specs-row"><td class="specs-label">Display</td><td class="specs-val">${mainSpecs.displaySize || 'Official Screen Specs'}</td></tr>
+                <tr class="specs-row"><td class="specs-label">Memory</td><td class="specs-val">${mainSpecs.memory || 'Official RAM & Storage'}</td></tr>
+                <tr class="specs-row"><td class="specs-label">Release Date</td><td class="specs-val">${phone.releaseDate || 'Check Official Site'}</td></tr>
+            </table>
         </div>
-        <table class="spec-table">
-            <tr class="spec-row"><td class="spec-label">Processor</td><td class="spec-value">${proc}</td></tr>
-            <tr class="spec-row"><td class="spec-label">Display</td><td class="spec-value">${disp}</td></tr>
-            <tr class="spec-row"><td class="spec-label">Camera</td><td class="spec-value">${cam}</td></tr>
-            <tr class="spec-row"><td class="spec-label">Battery</td><td class="spec-value">${bat}</td></tr>
-            <tr class="spec-row"><td class="spec-label">Memory</td><td class="spec-value">${mem}</td></tr>
-        </table>
     `;
-    container.innerHTML = htmlOutput;
+}
+
+function showError(container) {
+    container.innerHTML = `<div class="error">Network error ya API response slow hai. Dobara koshish karein!</div>`;
 }
 </script>
 
